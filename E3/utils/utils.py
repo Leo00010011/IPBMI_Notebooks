@@ -21,11 +21,13 @@ def get_csv_data(tissue_index):
       dataArr.append(listFromLine)
   return dataArr
 
-# def get_coef(index, energy):
-#   data = get_csv_data(index)
-#   coef = 0
-#   for item in data:
-#     if item[0] == energy:
-#       coef = item[1]
-#       break
-#   return coef
+def get_coef(index, energy):
+  data = get_csv_data(index)
+  coef = 0
+  for item in data:
+    if item[0] == energy:
+      print(item[0])
+      print(item[1])
+      coef = item[1]
+      break
+  return coef
