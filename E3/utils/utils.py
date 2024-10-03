@@ -26,8 +26,13 @@ def get_coef(index, energy):
   coef = 0
   for item in data:
     if item[0] == energy:
-      print(item[0])
-      print(item[1])
       coef = item[1]
       break
   return coef
+
+def normalize_data(data):
+  return np.round(data/data.max(), 2) * 256
+
+def getLine(data, nLine):
+  lines = np.array([])
+  return lines

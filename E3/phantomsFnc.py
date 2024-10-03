@@ -12,6 +12,8 @@ def cube_phantom_h(edge_size, energy):
     offset = (soft_tissue_size - bone_size) / 2
     offset = int(offset)
     tissue[offset:offset + bone_size, offset: offset+bone_size, offset:offset+bone_size] = bone_coef
+    # normalize
+    # tissue = utils.normalize_data(tissue)
     return tissue
   else:
     print('not powers of 2')
