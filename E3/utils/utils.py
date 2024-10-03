@@ -34,5 +34,5 @@ def normalize_data(data):
   return np.round(data/data.max(), 2) * 256
 
 def getLine(data, nLine):
-  lines = np.array([])
+  lines = data[:, nLine]
   return lines
