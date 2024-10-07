@@ -34,3 +34,15 @@ def cube_phantom_nh(edge_size, energy):
   else:
     print('not powers of 2')
     return 
+  
+
+def breast_phantom(edge_size, energy):
+    cell_size = edge_size//18
+    frame = np.full((edge_size, edge_size, edge_size),1)
+    mid_point = edge_size//2
+    # putting breast base
+    frame[mid_point - 6*cell_size: mid_point + 3*cell_size,
+          mid_point - 4*cell_size: mid_point + 3*cell_size,
+          mid_point - 3*cell_size: mid_point + 4*cell_size] = 0
+    return frame
+    
