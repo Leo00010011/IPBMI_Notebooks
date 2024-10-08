@@ -9,39 +9,65 @@ TISSUE_LABEL = {0: 'Adipose',
                 4: 'Soft',
                 5: 'Water'}
 
-
-def get_csv_data(tissue_index, csv_path=None):
-    if not csv_path:
-        csv_path = os.path.join(
-            sys.path[0], 'auxFiles', 'coefAtenuacion' + TISSUE_LABEL[tissue_index] + '.csv')
-    else:
-        csv_path = os.path.join(
-            csv_path, 'coefAtenuacion' + TISSUE_LABEL[tissue_index] + '.csv')
-    dataArr = []
-    with open(csv_path, 'r') as file:
-        next(file)
-        next(file)
-        for line in file:
-            line = line.strip().split('\t')
-            listFromLine = [float(item) for item in line]
-            dataArr.append(listFromLine)
-    return dataArr
+ADIPOSE_INDEX = 0
+AIR_INDEX = 1
+BONE_INDEX = 2
+BREAST_INDEX = 3
+SOFT_INDEX = 4
+WATER_INDEX = 5
 
 
-def get_coef(index, energy, csv_path=None):
-    data = get_csv_data(index, csv_path)
-    coef = 0
-    for item in data:
-        if item[0] == energy:
-            coef = item[1]
-            break
-    return coef
+SOURCE_PATH = 'C:\\Users\\ulloa\\Miooooo\\Master\\IPBMA\\IPBMANotebooks\\IPBMI_Notebooks\\E3\\auxFiles'
 
 
-def normalize_data(data):
-    return np.round(data/data.max(), 2) * 256
+
+class EnergyCoef:
+    tissue_coefs = {
+        'Adipose': None,
+        'Air': None,
+        'Bone': None,
+        'Breast': None,
+        'Soft': None,
+        'Water': None
+    }
+
+    def __init__(self, csv_path= None) -> None:
+      if not csv_path:
+        self.csv_path = os.path.join(sys.path[0], 'auxFiles')
+      else:
+        self.csv_path = csv_path
+
+    def normalize_data(data):
+        return np.round(data/data.max(), 2) * 256
 
 
-def getLine(data, nLine):
-    lines = data[:, nLine]
-    return lines
+    def getLine(data, nLine):
+        lines = data[:, nLine]
+        return lines
+    
+    def get_csv_data(self,tissue_index, csv_path=None):
+        data = EnergyCoef.tissue_coefs[TISSUE_LABEL[tissue_index]]
+        if data:
+           return data  
+        data = dict()
+        csv_path = os.path.join(self.csv_path, 'coefAtenuacion' + TISSUE_LABEL[tissue_index] + '.csv')
+        with open(csv_path, 'r') as file:
+            next(file)
+            next(file)
+            for line in file:
+                line = line.strip().split('\t')
+                data[float(line[0])] = line[1] 
+        EnergyCoef.tissue_coefs[TISSUE_LABEL[tissue_index]] = data
+        return data
+
+
+    def get_coef(self, tissue, energy, csv_path=None):
+        data: = self.get_csv_data(tissue, csv_path)
+        coef = 
+        
+        return coef
+
+db = EnergyCoef(SOURCE_PATH)
+
+print(db.get_coef(3,40, SOURCE_PATH))
+
