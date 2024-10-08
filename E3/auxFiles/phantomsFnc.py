@@ -1,5 +1,5 @@
 import numpy as np
-from utils.utils import get_coef
+from IoFnc import get_coef
 
 
 def cube_phantom_h(edge_size, energy):
@@ -39,17 +39,6 @@ def cube_phantom_nh(edge_size, energy):
     else:
         print('not powers of 2')
         return
-
-
-def breast_phantom(edge_size, energy):
-    cell_size = edge_size//18
-    frame = np.full((edge_size, edge_size, edge_size), 1)
-    mid_point = edge_size//2
-    # putting breast base
-    frame[mid_point - 4*cell_size: mid_point + 3*cell_size,
-          mid_point - 6*cell_size: mid_point + 3*cell_size,
-          mid_point - 3*cell_size: mid_point + 4*cell_size] = 0
-    return frame
 
 def breast_phantom(edge_size, energy):
     breast_coef = get_coef(3,energy)
