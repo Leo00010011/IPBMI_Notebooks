@@ -35,6 +35,8 @@ def get_coef(index, energy, csv_path=None):
         if item[0] == energy:
             coef = item[1]
             break
+    if coef == 0:
+        coef = np.interp(energy,[item[0] for item in data], [item[1] for item in data])
     return coef
 
 
@@ -45,3 +47,5 @@ def normalize_data(data):
 def getLine(data, nLine):
     lines = data[nLine, :]
     return lines
+
+get_coef(2, )
