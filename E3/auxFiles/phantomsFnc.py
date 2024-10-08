@@ -52,32 +52,32 @@ def breast_phantom(edge_size, energy):
     mid_point = edge_size//2
 
     # putting breast adipose 
-    frame[mid_point - 4*cell_size: mid_point + 3*cell_size,
+    frame[1 + mid_point - 4*cell_size: mid_point + 3*cell_size + 1,
           mid_point - 3*cell_size: mid_point + 4*cell_size,
           mid_point - 6*cell_size: mid_point + 3*cell_size] = adipose_coef
       
     # putting breast tissue 
-    frame[mid_point - 2*cell_size: mid_point + cell_size,
+    frame[1 + mid_point - 2*cell_size: mid_point + cell_size + 1,
           mid_point - cell_size: mid_point + 2*cell_size,
           mid_point - 5*cell_size: mid_point - 2*cell_size] = breast_coef
     
     # putting soft tissue
-    frame[mid_point - cell_size: mid_point,
+    frame[1 + mid_point - cell_size: mid_point + 1,
           mid_point: mid_point + cell_size,
           mid_point - 4*cell_size: mid_point - 3*cell_size] = soft_coef
 
     # putting right most square
-    frame[mid_point - 2*cell_size: mid_point + cell_size,
+    frame[1 + mid_point - 2*cell_size: mid_point + cell_size + 1,
           mid_point - cell_size: mid_point + 2*cell_size,
           mid_point + 3*cell_size: mid_point + 6*cell_size] = adipose_coef
       
     # putting second soft tissue
-    frame[mid_point - cell_size: mid_point,
+    frame[1 + mid_point - cell_size: mid_point + 1,
           mid_point: mid_point + cell_size,
           mid_point - cell_size: mid_point] = soft_coef
 
     # putting third soft tissue
-    frame[mid_point - cell_size: mid_point,
+    frame[1 + mid_point - cell_size: mid_point + 1,
           mid_point: mid_point + cell_size,
           mid_point + 4*cell_size: mid_point + 5*cell_size] = soft_coef
     
