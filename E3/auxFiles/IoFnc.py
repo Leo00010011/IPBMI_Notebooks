@@ -43,5 +43,5 @@ def normalize_data(data):
 
 
 def getLine(data, nLine):
-    lines = data[:, nLine]
+    lines = data[nLine, :]
     return lines
