@@ -9,14 +9,15 @@ def insertNoduleQImage(imgData, noduleSize, noduleContrast):
   large_edge = imgData.shape[0]
   insert_edge = large_edge * 0.01 * noduleSize
   insert_radius = int(insert_edge / 2)
-  nodule_value = np.mean(imgData) * 0.01 * noduleContrast
+
+  nodule_value = np.mean(imgData) * (1 - 0.01 * noduleContrast)
   # create a circle
   noduleImage = imgData.copy()
   start_offset = int(large_edge / 2)
   x = np.arange(large_edge)
   y = np.arange(large_edge)
-  cx = start_offset - 0.5
-  cy = start_offset - 0.5
+  cx = start_offset
+  cy = start_offset
   r = insert_radius
   mask = (x[np.newaxis,:]-cx)**2 + (y[:,np.newaxis]-cy)**2 < r**2
   noduleImage[mask] = nodule_value
