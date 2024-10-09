@@ -33,6 +33,8 @@ def get_coef(index, energy, csv_path=None):
     coef = 0
     for item in data:
         if item[0] == energy:
+            print(item[0])
+            print(item[1])
             coef = item[1]
             break
     if coef == 0:
@@ -48,4 +50,3 @@ def getLine(data, nLine):
     lines = data[nLine, :]
     return lines
 
-get_coef(2, )
