@@ -27,8 +27,4 @@ def detectorNoiseN_1_1(qImage:np.ndarray):
     print(noise.std())
     return np.sqrt(qImage)*noise + qImage
 
-def plotCellDistribution(img, numberOfBins):
-    hist, bin_edges = np.histogram(img, bins=numberOfBins)
-    bin_centers = 0.5 * (bin_edges[1:] + bin_edges[:-1])
-    plt.plot(bin_centers, hist)
 
