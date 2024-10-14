@@ -10,6 +10,5 @@ def plotMiddleLine(imgData, N1):
   plt.ylim(N1 - (2 * np.sqrt(N1)) - 50, N1 + (2 * np.sqrt(N1)) + 50)
 
 def plotCellDistribution(img, numberOfBins):
-    hist, bin_edges = np.histogram(img, bins=numberOfBins)
-    bin_centers = 0.5 * (bin_edges[1:] + bin_edges[:-1])
-    plt.plot(bin_centers, hist)
+    img = img.flatten()
+    plt.hist(img, bins=numberOfBins, histtype='step')
