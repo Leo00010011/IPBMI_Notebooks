@@ -25,8 +25,6 @@ def cube_phantom_nh(edge_size, energy):
         return
     
 def interactor_PR(N0, obj, prj):
-    # N0 * e^{-mux}
-    # N_0e^{-\mu (x+z)} = N_0e^{-\mu x}e^{-\mu z}
     coef_sum = 0.0
     if prj == 'frontal':
         coef_sum = np.sum(obj, axis=2)
@@ -47,7 +45,7 @@ def getNumberPhotonsCell(qImage, N0):
         if photon_count <= N0:
             photon_distribution[int(photon_count)] += photon_count
     
-    hist = [photon_distribution, photon_distribution.flatten()]
+    hist = [photon_distribution, qImage.flatten()]
     return hist
 
 def getNumberCellsPhoton(qImage, N0):
