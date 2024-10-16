@@ -11,6 +11,8 @@ TISSUE_LABEL = {0: 'Adipose',
 def get_csv_data(tissue_index):
     
     csv_path = os.path.join(sys.path[0], 'auxFiles', 'coef', 'coefAtenuacion' + TISSUE_LABEL[tissue_index] + '.csv')
+    if not os.path.exists(csv_path):
+        csv_path = os.path.join('.', 'auxFiles', 'coef', 'coefAtenuacion' + TISSUE_LABEL[tissue_index] + '.csv')
     dataArr = []
     with open(csv_path, 'r') as file:
         next(file)
