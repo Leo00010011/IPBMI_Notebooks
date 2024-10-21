@@ -61,5 +61,10 @@ def getNumberCellsPhoton(qImage, N0):
 
 def detectorNoiseP_1_1(qImage):
     Poisson = np.random.poisson(qImage)
-    print('N Cells:',  Poisson.shape[0], Poisson.shape[1])
-    return Poisson
+    dImgNum = getNumberPhotons(Poisson)
+    imgNum = getNumberPhotons(qImage)
+    if dImgNum >= imgNum:
+        return detectorNoiseP_1_1(qImage)
+    else:
+        print('N Cells:',  Poisson.shape[0], Poisson.shape[1])
+        return Poisson
