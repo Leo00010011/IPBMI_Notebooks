@@ -35,3 +35,13 @@ def get_coef(index, energy):
     if coef == 0:
         coef = np.interp(energy,[item[0] for item in data], [item[1] for item in data])
     return coef
+
+def getContrast(image, x0, y0, x1, y1, w):
+    region_a = np.mean(image[x0: x0 + w, y0: y0 + w])
+    region_b = np.mean(image[x1: x1 + w, y1: y1 + w])
+    max_i = np.max(image)
+    return np.abs(region_a - region_b)/max_i    
+
+def getSNR(image, x0, y0, w):
+    region = image[x0: x0 + w,y0: y0 + w]
+    return np.mean(region)/np.std(region)

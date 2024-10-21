@@ -1,5 +1,6 @@
 import numpy as np
 from auxFiles.auxFnc import get_coef
+import matplotlib.pyplot as plt
 
 def source(Kpv, I0):
   N0 = I0
@@ -56,6 +57,7 @@ def getNumberCellsPhoton(qImage, N0):
     
     hist = [photon_distribution, photon_distribution.flatten()]
     return hist
+
 
 def detectorNoiseP_1_1(qImage):
     Poisson = np.random.poisson(qImage)
