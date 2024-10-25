@@ -1,5 +1,6 @@
 import numpy as np
 import os, sys
+from PIL import Image
 
 TISSUE_LABEL = {0: 'Adipose',
                 1: 'Air',
@@ -72,10 +73,79 @@ def interactor_PR(N0, obj, prj):
     return N0 * np.exp((-coef_sum / coef_sum.shape[0]))
 
 def getNumberCellsPhoton(qImage, N0):
-    photon_distribution = np.zeros(N0 + 1, dtype=int)
+    photon_distribution = np.zeros(len(qImage.flatten()), dtype=int)
     for photon_count in qImage.flatten():
-        if photon_count <= N0:
-            photon_distribution[int(photon_count)] += 1
+      photon_distribution[int(photon_count)] += 1
     
     hist = [photon_distribution, photon_distribution.flatten()]
     return hist
+
+def getNumberPhotonsCell(qImage, N0):
+    photon_distribution = np.zeros(len(qImage.flatten()), dtype=int)
+    for photon_count in qImage.flatten():
+      photon_distribution[int(photon_count)] += photon_count
+      
+    hist = [photon_distribution, qImage.flatten()]
+    return hist
+
+def insertArtifact(obj, pos, sizeArtifact, mu):
+    radius = int(sizeArtifact / 2)
+    x, y, z = pos
+    x_range = range(x - radius, x + radius + 1)
+    y_range = range(y - radius, y + radius + 1)
+    z_range = range(z - radius, z + radius + 1)
+
+    for i in x_range:
+        for j in y_range:
+            for k in z_range:
+                distance = np.sqrt((i - x) ** 2 + (j - y) ** 2 + (k - z) ** 2)
+                if distance < radius:
+                    obj[k, j, i] = mu
+    return obj
+
+def detector_QDE(imgData, n, m, QDE):
+  original_total_photons = np.sum(imgData)
+  target_total_photons = original_total_photons * QDE
+  img_pil = Image.fromarray(imgData)
+  
+  img_resized_pil = img_pil.resize((n, m), resample=Image.BOX)
+  img_resized_array = np.asarray(img_resized_pil)
+
+  resized_total_photons = np.sum(img_resized_array)
+
+  scaling_factor = target_total_photons / resized_total_photons
+  img_detector = img_resized_array * scaling_factor
+  return img_detector
+
+def detectorNoiseFullP_QDE(image, n, m, QDE):
+    # Ensure the input image is a numpy array
+    img_data = np.array(image)
+    
+    # Scale the image data to simulate a higher photon count
+    img_data = img_data * 10
+    
+    # Apply Poisson noise based on quantum efficiency
+    img_data_after_QDE = np.random.poisson(img_data * QDE)
+    
+    # Convert to uint8 for image manipulation (after scaling back down)
+    img_data_after_QDE = (img_data_after_QDE / 10).astype(np.uint32)
+    
+    # Convert numpy array to PIL Image
+    img_pil = Image.fromarray(img_data_after_QDE)
+    
+    # Resize the image to n x m
+    img_resized_pil = img_pil.resize((n, m), resample=Image.BOX)
+
+    original_num = np.sum(img_data_after_QDE)
+    target_num = np.sum((image * QDE))
+    now_num = np.sum(img_resized_pil)
+    scaling = target_num / now_num
+
+    # Convert back to numpy array
+    img_resized_array = np.asarray(img_resized_pil * scaling)
+    
+    return img_resized_array
+
+def getSNR(image, x0, y0, w):
+    region = image[x0: x0 + w,y0: y0 + w]
+    return np.mean(region)/np.std(region)
