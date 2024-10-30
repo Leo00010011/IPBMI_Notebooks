@@ -10,13 +10,11 @@ TISSUE_LABEL = {0: 'Adipose',
                 5: 'Water'}
 
 
-def get_csv_data(tissue_index, csv_path=None):
-    if not csv_path:
-        csv_path = os.path.join(
-            sys.path[0], 'auxFiles', 'coef', 'coefAtenuacion' + TISSUE_LABEL[tissue_index] + '.csv')
-    else:
-        csv_path = os.path.join(
-            csv_path, 'coef', 'coefAtenuacion' + TISSUE_LABEL[tissue_index] + '.csv')
+def get_csv_data(tissue_index):
+    csv_path = os.path.join(sys.path[0], 'auxFiles', 'coef', 'coefAtenuacion' + TISSUE_LABEL[tissue_index] + '.csv')
+    if not os.path.exists(csv_path):
+        csv_path = os.path.join('.', 'auxFiles', 'coef', 'coefAtenuacion' + TISSUE_LABEL[tissue_index] + '.csv')
+
     dataArr = []
     with open(csv_path, 'r') as file:
         next(file)
@@ -27,8 +25,8 @@ def get_csv_data(tissue_index, csv_path=None):
             dataArr.append(listFromLine)
     return dataArr
 
-def get_coef(index, energy, csv_path=None):
-    data = get_csv_data(index, csv_path)
+def get_coef(index, energy):
+    data = get_csv_data(index)
     coef = 0
     for item in data:
         if item[0] == energy:
@@ -41,6 +39,9 @@ def get_coef(index, energy, csv_path=None):
 # for E6
 def getCoef(fileName, eE):
     csv_path = os.path.join(sys.path[0], 'auxFiles', 'coef', fileName)
+    if not os.path.exists(csv_path):
+        csv_path = os.path.join('.', 'auxFiles', 'coef', fileName)
+
     dataArr = []
     with open(csv_path, 'r') as file:
         next(file)
