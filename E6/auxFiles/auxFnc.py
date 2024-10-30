@@ -74,9 +74,10 @@ def interactor_PR(N0, obj, prj):
     return N0 * np.exp((-coef_sum / coef_sum.shape[0]))
 
 def getNumberCellsPhoton(qImage, N0):
-    photon_distribution = np.zeros(len(qImage.flatten()), dtype=int)
+    photon_distribution = np.zeros(N0 + 1, dtype=int)
     for photon_count in qImage.flatten():
-      photon_distribution[int(photon_count)] += 1
+        if photon_count <= N0:
+            photon_distribution[int(photon_count)] += 1
     
     hist = [photon_distribution, photon_distribution.flatten()]
     return hist
