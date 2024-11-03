@@ -186,6 +186,9 @@ def down_scale_image(img, n, m):
 
 def detector_QDE(qImage: np.ndarray, n, m, qde):
     n0, m0 = qImage.shape
+    if n == n0 and m == m0:
+        return qImage
+    
     result = None
     if n < n0 and m < m0:
         result = down_scale_image(qImage, n, m)
