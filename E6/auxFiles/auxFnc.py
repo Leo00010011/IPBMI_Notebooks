@@ -202,9 +202,12 @@ def detector_QDE(qImage: np.ndarray, n, m, qde):
 
 
 def detectorNoiseFullP_QDE(image, n, m, QDE):
-    ideal = detector_QDE(image, n, m, QDE)
-    noisy = np.random.poisson(ideal)
-    return noisy
+    img_data = np.array(image)
+    image = img_data * 10
+    poisson_image = np.random.poisson(image)
+    ideal = detector_QDE(poisson_image, n, m, QDE)
+    img_data_after_QDE = (ideal / 10).astype(np.uint32)
+    return img_data_after_QDE
 
 
 def getSNR(image, x0, y0, w):
