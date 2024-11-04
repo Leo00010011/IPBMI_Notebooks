@@ -210,6 +210,12 @@ def detectorNoiseFullP_QDE(image, n, m, QDE):
     return img_data_after_QDE
 
 
+# def detectorNoiseFullP_QDE(image, n, m, QDE):
+#     poisson_image = np.random.poisson(image)
+#     return detector_QDE(poisson_image, n, m, QDE)
+    
+
+
 def getSNR(image, x0, y0, w):
     region = image[x0: x0 + w, y0: y0 + w]
     return np.mean(region)/np.std(region)
