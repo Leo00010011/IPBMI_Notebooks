@@ -187,32 +187,30 @@ def down_scale_image(img, n, m):
 def detector_QDE(qImage: np.ndarray, n, m, qde):
     n0, m0 = qImage.shape
     if n == n0 and m == m0:
-        return qImage
-    
+        return qImage*qde
     result = None
     if n < n0 and m < m0:
+        print('downscaling')
         result = down_scale_image(qImage, n, m)
-
     elif n > n0 and m > m0:
-        result = None
+        print('upscaling')
+        img_pil = Image.fromarray(qImage)
+        img_resized_pil = img_pil.resize((n, m), resample=Image.NEAREST)
+        img_resized_array = np.asarray(img_resized_pil)
+        f_h = n0/n
+        f_w = m0/m
+        result = img_resized_array *f_h*f_w
     else:
         raise NotImplementedError()
-    result = result*qde
-    return result
+    return result*qde
 
 
 def detectorNoiseFullP_QDE(image, n, m, QDE):
-    img_data = np.array(image)
-    image = img_data * 10
-    poisson_image = np.random.poisson(image)
-    ideal = detector_QDE(poisson_image, n, m, QDE)
-    img_data_after_QDE = (ideal / 10).astype(np.uint32)
-    return img_data_after_QDE
-
-
-# def detectorNoiseFullP_QDE(image, n, m, QDE):
-#     poisson_image = np.random.poisson(image)
-#     return detector_QDE(poisson_image, n, m, QDE)
+    # scaling
+    # poisson
+    # qde
+    ideal = detector_QDE(image, n, m, QDE)/QDE
+    return np.random.poisson(ideal)*QDE
     
 
 
