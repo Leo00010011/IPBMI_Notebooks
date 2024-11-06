@@ -1,5 +1,6 @@
 import numpy as np
 import os, sys
+from PIL import Image
 
 TISSUE_LABEL = {0: 'Adipose',
                 1: 'Air',
@@ -38,3 +39,42 @@ def source(Kpv, I0):
   N0 = I0
   eE = Kpv * 0.4
   return N0, eE
+
+def interactor_CT(N0, obj, zPos, nProjections):
+  slice = obj[:, zPos, :]
+  angles = np.linspace(0, 360, nProjections, endpoint=False)
+  sinograma = np.full((nProjections, slice.shape[1] * 2), N0)
+  offset = int(slice.shape[1] // 2)
+  img = Image.fromarray(slice)
+  for i, angle in enumerate(angles):
+    rotated_img = img.rotate(angle)
+    projection_coef = np.sum(rotated_img, axis=0)
+    projection = N0 * np.exp(-projection_coef / projection_coef.shape[0])
+    sinograma[i, offset:offset + slice.shape[1]] = projection
+
+  return sinograma
+
+def detectorSinogram(qImage, nProjections, nDetectors):
+  detected_img = np.zeros((nProjections, nDetectors))
+  start = qImage.shape[1] / 2 - nDetectors / 2
+  end = qImage.shape[1] / 2 + nDetectors / 2
+  detector_angles = np.linspace(start, end, nDetectors, endpoint=False).astype(int)
+  for i, angle in enumerate(detector_angles):
+    line = detector_1D(qImage, angle, nProjections)
+    detected_img[:, i] = line
+  return detected_img
+
+def detector_1D(qImage, angle, nDetectors):
+  detected_line = qImage[:nDetectors, angle]
+  return detected_line
+
+
+# $
+# A = N_0 * e^{-\mu d} \\
+# \frac{A}{N_0} = e^{-\mu d} \\
+# log(\frac{A}{N_0}) = -\mu d \\
+# -log(\frac{A}{N_0}) = \mu d
+# $
+def process_CT(image, N0):
+    compensated_sinogram = -np.log(image / N0)
+    return compensated_sinogram
