@@ -56,25 +56,19 @@ def interactor_CT(N0, obj, zPos, nProjections):
 
 def detectorSinogram(qImage, nProjections, nDetectors):
   detected_img = np.zeros((nProjections, nDetectors))
-  start = qImage.shape[1] / 2 - nDetectors / 2
-  end = qImage.shape[1] / 2 + nDetectors / 2
-  detector_angles = np.linspace(start, end, nDetectors, endpoint=False).astype(int)
-  for i, angle in enumerate(detector_angles):
-    line = detector_1D(qImage, angle, nProjections)
-    detected_img[:, i] = line
+  for i in range(nProjections):
+    line = detector_1D(qImage, i, nDetectors)
+    detected_img[i, :] = line
   return detected_img
 
 def detector_1D(qImage, angle, nDetectors):
-  detected_line = qImage[:nDetectors, angle]
+  start = int(qImage.shape[1] / 2 - nDetectors / 2)
+  end = int(qImage.shape[1] / 2 + nDetectors / 2)
+  detected_line = qImage[angle,start: end ]
   return detected_line
 
 
-# $
-# A = N_0 * e^{-\mu d} \\
-# \frac{A}{N_0} = e^{-\mu d} \\
-# log(\frac{A}{N_0}) = -\mu d \\
-# -log(\frac{A}{N_0}) = \mu d
-# $
 def process_CT(image, N0):
     compensated_sinogram = -np.log(image / N0)
     return compensated_sinogram
+

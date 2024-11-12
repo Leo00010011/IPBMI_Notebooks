@@ -1,5 +1,9 @@
 import numpy as np
-from auxFnc import get_coef
+try:
+    from auxFnc import get_coef
+except:
+    from auxFiles.auxFnc import get_coef
+
 
 def cube_phantom_h(edge_size, energy):
     soft_coef = round(get_coef(index=4, energy=energy), 2)
