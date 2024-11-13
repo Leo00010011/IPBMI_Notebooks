@@ -69,6 +69,6 @@ def detector_1D(qImage, angle, nDetectors):
 
 
 def process_CT(image, N0):
-    compensated_sinogram = -np.log(image / N0)
+    compensated_sinogram = -np.ln(image / N0)
     return compensated_sinogram
 
