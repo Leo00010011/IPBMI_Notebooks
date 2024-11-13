@@ -40,14 +40,13 @@ def cube_phantom_cc(edge_size, energy):
 def interactor_CT(N0, obj, zPos, nProjections):
   slice = obj[:, zPos, :]
   angles = np.linspace(0, 360, nProjections, endpoint=False)
-  sinograma = np.full((nProjections, slice.shape[1] * 2), N0)
-  offset = int(slice.shape[1] // 2)
+  sinograma = np.zeros((nProjections, slice.shape[1]))
   img = Image.fromarray(slice)
   for i, angle in enumerate(angles):
     rotated_img = img.rotate(angle)
     projection_coef = np.sum(rotated_img, axis=0)
     projection = N0 * np.exp(-projection_coef / projection_coef.shape[0])
-    sinograma[i, offset:offset + slice.shape[1]] = projection
+    sinograma[i, :] = projection
 
   return sinograma
 
@@ -59,9 +58,10 @@ def detectSinogram(qImage, nProjections, nDetectors):
   return detected_img
 
 def detector_1D(qImage, angle, nDetectors):
-  start = int(qImage.shape[1] / 2 - nDetectors / 2)
-  end = int(qImage.shape[1] / 2 + nDetectors / 2)
-  detected_line = qImage[angle,start: end ]
+  detected_line = np.full(nDetectors, 75000)
+  start = nDetectors // 2 - qImage.shape[1] // 2
+  end = nDetectors // 2 + qImage.shape[1] // 2
+  detected_line[start:end] = qImage[angle, :]
   return detected_line
 
 def process_CT(image, N0):
