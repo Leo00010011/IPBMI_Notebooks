@@ -72,11 +72,10 @@ def reconstructor(sinogram, nProj):
     rows, columns = sinogram.shape
     reconstructed_image = np.zeros((columns, columns))
     
-    angles = np.linspace(0, 360, rows, endpoint=False)
+    angles = np.linspace(0, 360, nProj, endpoint=False)
     if nProj < rows:
         space = rows // nProj
         projections = sinogram[::space]
-        angles = angles[::space]
     else:
         projections = sinogram
     
